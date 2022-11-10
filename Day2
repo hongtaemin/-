@@ -1,0 +1,86 @@
+import pandas as pd
+
+df_my_index=pd.read_csv("C:\Users\310-37\Desktop\data2\countries.csv",index_col=0)
+df_no_index=pd.read_csv("C:\Users\310-37\Desktop\data2\countries.csv")
+print(df_my_index["population"])
+print(df_no_index["population"])
+
+
+import pandas as pd
+
+weather= pd.read_csv('c:/user/310-37/desktop/data2/weather.csv',index_col = 0,encoding="CP949")
+print(weather.describe())
+print(weather.mean())
+print(weather.std())
+
+
+import csv
+import matplotlib.pyplot as plt
+
+f=open('C:/User/310-37/Desktop/data2/weather.csv')
+data=csv.reader(f)
+header=next(data)
+
+monthly_wind = [0 for x in range(12) ]
+days_counted = [0 for x in range(12) ]
+
+for row in data:
+    month=int(row[0][5:7])
+    if row[3] != '':
+        wind= float(row[3])
+        monthly_wind[month-1]+=wind
+        days_counted[month-1]+=1
+
+for i in range(12) :
+    monthly_wind[i] /=days_counted[i]
+
+plt.plot(monthly_wind,"blue")
+plt.show()
+
+f.close()    
+
+
+import cv2
+
+img_gray= cv2.imread("C:/Users/310-37/Desktop/data2/mandrill.png",cv2.IMREAD_GRAYSCALE)
+img_color=cv2.imread("C:/Users/310-37/Desktop/data2/mandrill.png",cv2.IMREAD_COLOR)
+
+cv2.imshow("grayscale",img_gray)
+cv2.imshow("color image",img_color)
+
+cv2.waitKey(0)
+cv2.destroyALLWindows()
+
+
+
+import cv2
+
+img=cv2.imread("C:/Users/310-37/Desktop/data2/mandrill.png",1)
+cv2.line(img,(0,0),(200,200), (0,0,255),5)
+cv2.arrowedLine(img, (0,200), (200,20), (0,0,255),5)
+cv2.imshow("lined",img)
+
+cv2.rectangle(img,(0,200), (200,20), (0,0,0),5)
+cv2.putText(img,"hello",(70,70),fontFace=2,fontScale=1, color=(0,0,0))
+
+
+
+import cv2
+global img1, img2
+
+def on_change_weight(x):
+    weight= x/100
+    img_merged = cv2.addWeighted(img1, 1-weight, img2, weight,0)
+    cv2.imshow("Display",img_merged)
+    
+cv2.namedWindow("Display")
+cv2.createTrackbar("weight","Display",0,100,on_change_weight)
+
+img1 = cv2.imread("C:/Users/310-37/Desktop/data2/green_black.png")
+img2 = cv2.imread("C:/Users/310-37/Desktop/data2/iceberg.png")
+img1 = cv2.resize(img1,(300,400))
+img2 = cv2.resize(img2,(300,400))]
+    
+ANDed = cv2.bitwise_and(img1,img2)
+ORed = cv2.bitwise_or(img1,img2)
+XORed = cv2.bitwise_xor(img1,img2)
