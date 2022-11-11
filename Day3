@@ -1,0 +1,125 @@
+#numpy
+import numpy as np
+a = np.arange(1,10).reshape(3,3)
+a
+a= a.astype(np.float64)
+a
+a[0][1]
+a[0][1] = np.nan #float 형일 때만 가능
+a
+a=np.linspace(1,10,30)
+a
+data = np.arange(1,10).reshape(3,3)
+data
+data+data
+np.dot(data,data)
+data@data
+#0차원 스칼라
+a = np.array(1)
+a
+a.shape
+a.ndim #몇차원인지
+#1차원 벡터
+a = np.array([1])
+a
+a.shape
+a.ndim
+#2차원 행렬
+a = np.array([[1,2,3], [4,5,6]]) #[]의 갯수로 차원계산
+a
+a.shape #2행 3열
+a.ndim #몇차원인지
+#3차원 이상 Tensor
+a = np.array([[[1,2],[3,4]],[[5,6],[7,8]]])
+a
+a.shape
+a.ndim
+a = np.arange(12).reshape(2,3,2)
+a
+b = np.ones(12) #1로 채워진 array 생성
+b
+c = np.eye(3) #3X3 단위행렬 생성
+c
+d = np.empty([2,3]) #초기화가 없는 값으로 행렬 생성
+d
+e = np.full([3,4], 1000)
+e
+f = np.linspace(2,10,6) #2부터 10까지 같은 간격으로 6개 생성
+f
+np.mean(data)
+np.median(data) #중앙값
+np.std(data) #표준편차
+np.sum(data) #모든 원소의 합
+sum(data) #같은 열끼리 합
+np.sum(data, axis =1) #행끼리 합
+np.max(data, axis = 0) #같은 열에서 큰 값만
+
+#pandas
+import numpy as np
+import pandas as pd
+
+data1=np.arange(0,50,10)
+data1
+a = pd.Series(data1, index=["a","b","c","d","e"])
+a
+b=pd.Series(data1)
+a.loc['b']
+a.iloc[1]
+a >15
+a[a>15]
+a.add(100) #a+100
+a.sub(100)
+a.mul(100)
+rawData = np.random.randint(50,100, size=(4,3)) #50부터 100사이 수 중 랜덤으로 4x3 행렬생성
+rawData
+df = pd.DataFrame(rawData, 
+                  index = ['1반','2반','1반','2반'], 
+                  columns =['국','영','수'] )
+df
+#df[0] -> 에러
+df['국']
+df['평균'] = round((df['국']+df['수']+df['영'])/3,2) # 새로운 컬럼 생성 ,2는 소수점 둘째자리까지 #round함수는 각자 위치에 맞는 데이터 넣어줌
+df
+df['na'] = np.nan
+df
+del df['na']
+df
+df[df.평균 >80]
+
+df = pd.DataFrame(rawData, 
+                  index = ['1반','2반','1반','2반'], 
+                  columns =['국','영','수'] )
+df
+df = df.drop(['2반']) #index지울때는 따로 axis 지정X column 지울때는 axis = 'columns'지정 해줘야함
+df
+
+df = pd.DataFrame(rawData, 
+                  index = ['1반','2반','1반','2반'], 
+                  columns =['국','영','수'] )
+df
+df =df.astype('float64')
+df
+
+df['수'][2] = np.nan #DataFrame에서는 위치 나타낼때 컬럼먼저 
+df
+df.dropna(axis =0) #결측값이 있는 행 삭제, but 원본삭제는 아님 #원본삭제하려면 inplace=True
+df
+df.dropna(axis =1) #결측값있는 컬럼 삭제
+df.fillna('hello')
+
+df.T #컬럼 인텍스 위치변환
+df.index = [['1학년','1학년','2학년','2학년'],['1반','2반','1반','2반']] #멀티인덱스
+df
+df.columns = [['언어','언어','수리'],['국','영','수']]
+df
+df['언어']['국']
+
+df.iloc[0]
+df.loc['1학년'].loc['1반']
+df.dtypes
+df.describe()
+df.isnull() #결측치 있는지
+df.isnull().sum() #결측치 갯수
+a = pd.DataFrame(np.arange(1,10).reshape(3,3))
+pd.concat([a,b],axis=0,ignore_index=True) #옆에 붙이기
+a.append(b,ignore_index=True) #a밑에 b붙이기
