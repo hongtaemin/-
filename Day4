@@ -1,0 +1,117 @@
+install.packages("ggplot2")
+library(ggplot2)
+data(mpg)
+str(mpg)  
+head(mpg)
+
+table(mpg$drv) 
+summary(mpg$hwy)
+
+hist(mpg$hwy)
+qplot(hwy,data = mpg,fill=I('lightblue'),col=I("black"))
+qplot(hwy, data=mpg, fill=drv, col=I("black")) 
+qplot(hwy, data=mpg, fill=drv, col=I("black"), binwidth=2) 
+qplot(hwy, data=mpg, fill=drv, facets=.~ drv, binwidth=2) 
+qplot(hwy, data=mpg, fill=drv, facets=drv~., binwidth=2)  
+
+head(diamonds)
+qplot(clarity, data=diamonds, fill=cut, geom="bar") 
+qplot(clarity, data=diamonds, color=cut, geom="bar") 
+
+qplot(displ, hwy, data=mpg) 
+qplot(displ, hwy, data=mpg, color=drv)
+qplot(displ, hwy, data=mpg, color=drv, facets=.~ drv) 
+
+head(mtcars)
+qplot(wt, mpg, data=mtcars, color=factor(carb)) # 색상적용
+qplot(wt, mpg, data=mtcars, color=factor(carb),size=qsec) # 크기적용
+qplot(wt, mpg, data=mtcars, color=factor(carb),size=qsec,shape=factor(cyl))#모양적용
+
+qplot(wt, mpg, data=mtcars, geom="point") # geom="point": default
+qplot(wt, mpg, data=mtcars, geom="smooth") # geom="smooth" (method='lowess‘) 
+qplot(wt, mpg, data=mtcars, geom=c("point", "smooth")) 
+qplot(wt, mpg, data=mtcars, color=factor(cyl), geom=c("point", "smooth"))
+qplot(wt, mpg, data=mtcars, color=factor(cyl), geom="line") # geom="line“ (polygon)
+qplot(wt, mpg, data=mtcars, color=factor(cyl), geom=c("point", 'line'))
+
+# ggplot function 
+# (1) Setup
+# no plot will be printed until you add the geom layers
+# aes argument stands for aesthetics
+# ggplot2 considers the X and Y axis of the plot to be aesthetics as well, along with color, size, shape, fill etc
+library(ggplot2)
+ggplot(diamonds) # if only the dataset is known.
+ggplot(diamonds, aes(x=carat)) # if only X-axis is known. Y-axis can be specified in respective.
+ggplot(diamonds, aes(x=carat, y=price)) # if both X and Y axes are fixed for all layers. geoms
+ggplot(diamonds, aes(x=carat, color=cut)) # Each category of the 'cut' variable will now have a distinct  color, once a geom is added.
+ggplot(diamonds, aes(x=carat), color="steelblue") # fixed color
+ggplot(diamonds, aes(x=carat, y=price, color=cut)) 
+
+# (2) Layers
+# The layers in ggplot2 are also called ‘geoms’
+# Once the base setup is done, you can append the geoms one on top of the other
+ggplot(diamonds, aes(x=carat, y=price, color=cut)) + geom_point() + geom_smooth() # Adding scatterplot geom (layer1) and smoothing geom (layer2)
+ggplot(diamonds) + geom_point(aes(x=carat, y=price, color=cut)) + geom_smooth(aes(x=carat, y=price, color=cut)) # Same but specifying the aesthetics inside the geoms
+ggplot(diamonds, aes(x=carat, y=price)) + geom_point(aes(color=cut)) + geom_smooth()  # same but simpler
+
+# (3) Labels
+#  wish to add the plot’s main title and perhaps change the X and Y axis titles
+# the labs layer means for specifying the labels
+gg <- ggplot(diamonds, aes(x=carat, y=price, color=cut)) + geom_point() + labs(title="Scatterplot", x="Carat", y="Price")  # add axis lables and plot title
+print(gg)
+
+# (4) Theme
+#  wish to increase the size of the labels and change the legend title
+# add title and axis text, change legend title 
+gg1 <- gg + theme(plot.title=element_text(size=30, face="bold"), 
+                  axis.text.x=element_text(size=15), axis.text.y=element_text(size=15),
+                  axis.title.x=element_text(size=25), axis.title.y=element_text(size=25)) + 
+  scale_color_discrete(name="Cut of diamonds")
+print(gg1)  # print the plot
+
+# To change legend title (a bit tricky)
+# based on color vs shape or factor vs numeric
+a. scale_color_discrete(name="legend title")
+b. scale_color_continuous(name="legend title")
+c. scale_shape_discrete(name="legend title")
+d. scale_shape_continuous(name="legend title")
+
+# (5) Facets
+# want one chart for one cut
+gg1 + facet_wrap(.~cut, ncol=3)  # columns defined by 'cut'
+gg1 + facet_wrap(color ~ cut)  # row: color, column: cut
+gg1 + facet_grid(color ~ cut)   # In a grid
+
+# (6) Box plot
+library(datasets)
+data(airquality)
+airquality$Month <- factor(airquality$Month,labels = c("May", "Jun", "Jul", "Aug", "Sep"))
+p10 <- ggplot(airquality, aes(x = Month, y = Ozone)) + geom_boxplot()
+p10
+p10 <- p10 + scale_x_discrete(name = "Month") + scale_y_continuous(name = "Mean ozone in \nparts per billion")
+p10
+p10 <- p10 + scale_y_continuous(name = "Mean ozone in\nparts per billion", breaks = seq(0, 175, 25),limits=c(0, 175))
+p10
+
+p10 <- ggplot(airquality, aes(x = Month, y = Ozone)) +
+  geom_boxplot(fill = "#4271AE", colour = "#1F3552") +
+  scale_y_continuous(name = "Mean ozone in\nparts per billion",
+                     breaks = seq(0, 175, 25), limits=c(0, 175)) +
+  scale_x_discrete(name = "Month") + ggtitle("Boxplot of mean ozone by month")
+p10
+p10 <- p10 + theme_bw()
+p10
+
+ggplot(data=bmiukb, aes(x=cohort, y=pred, fill=method)) +
+  geom_bar(stat="identity", position=position_dodge(), colour="black")+ theme_bw() + 
+  geom_errorbar(aes(ymin=pred-se, ymax=pred+se),width=.2,position=position_dodge(.9), colour="#606060") +
+  xlab("Validation Dataset") + 
+  ylab(quote(paste("Prediction ",R^2,"(%)"))) +
+  labs(fill="", colour="", linetype="", title="HGT-BMI (N=436,898)") + 
+  scale_fill_manual(values=c("#F3898B","#FF6666","#F9A825","#EF6C00","#42A5F5","#1976D2", "#5C6BC0","#283593")) + 
+  theme(plot.title = element_text(lineheight=.8, size=16), axis.text=element_text(size=14),
+        axis.title=element_text(size=14),legend.text=element_text(size=12), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# 가장 최근 그래프 저장
+ggsave(file="C:/ukbiobank_bmi.pdf", width=7.5, height=7)  # you may use plot=p option
+ggsave(file="C:/diamond_price.jpg", dpi=100)
