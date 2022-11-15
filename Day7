@@ -1,0 +1,52 @@
+setwd("C:/Rwork/Part-II")
+user_data <- read.csv("user_data.csv")
+head(user_data)            table(user_data$house_type)
+user_data$house_type2 <- ifelse(user_data$house_type == 1 | user_data$house_type == 2, 0, 1) # 더미 형식 파생 변수 추가 (단독주택 | 다세대주택 vs 아파트 | 오피스텔)
+head(user_data)
+# (2) 1:1 관계로 파생 변수 생성
+setwd("C:/Rwork/Part-II")
+pay_data <- read.csv("pay_data.csv") 
+str(pay_data)
+head(pay_data)
+
+library(reshape2) 
+product_price <- dcast(pay_data, user_id~product_type, value.var="price", sum, na.rm=T) # 행 ~ 열 
+names(product_price)[-1] <-c('식료품(1)','생필품(2)','의류(3)','잡화(4)','기타(5)')
+head(product_price) # 행 (user_id) 열 (상품 타입)
+pay_price <- dcast(pay_data, user_id ~ pay_method, length) # 행 ~ 열 
+names(pay_price)[-1] <- c('현금(1)','직불카드(2)','신용카드(3)','상품권(4)')
+head(pay_price) # 행(user_id) 열(고객 지불 유형)
+
+# (3) 파생 변수 합치기
+library(plyr) # 패키지 로딩
+user_pay_data <- join(user_data, product_price, by='user_id')
+head(user_pay_data)
+user_pay_data <- join(user_pay_data, pay_price, by='user_id')
+user_pay_data[c(1:10), c(1,7:15)]
+
+# (4) 수정된 데이터 저장
+write.csv(user_pay_data, "cleanData.csv", quote=F, row.names=F) 
+data <- read.csv("cleanData.csv")
+# (1) Check missing values (NA)
+setwd("C:/Rwork/Part-II")
+dataset <- read.csv("dataset.csv") 
+dataset$resident <- as.factor(dataset$resident) # to qualitative variable
+table(dataset$resident, exclude=NULL) # qualitative variable
+summary(dataset$resident) # qualitative variable
+summary(dataset$price)  # quantitative variable
+
+# (2) Remove missing values 
+price2 <- na.omit(dataset$price) # remove missings for one column
+summary(price2)
+
+# (1) Check missing values (NA)
+setwd("C:/Rwork/Part-II")
+dataset <- read.csv("dataset.csv") 
+dataset$resident <- as.factor(dataset$resident) # to qualitative variable
+table(dataset$resident, exclude=NULL) # qualitative variable
+summary(dataset$resident) # qualitative variable
+summary(dataset$price)  # quantitative variable
+
+# (2) Remove missing values 
+price2 <- na.omit(dataset$price) # remove missings for one column
+summary(price2)
