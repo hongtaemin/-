@@ -1,0 +1,574 @@
+#Lecture2,3
+seq(1,10,0.1)     #seq(from,to, 간격)
+rep(c(1,2,3),3,each=3)  #rep(벡터,전체반복횟수,개별 반복횟수)
+x<-c(1,3,5,7)
+y <- c(3,5)
+union(x,y)   #합집합
+setdiff(x,y) #차집합
+intersect(x,y)#교집합
+(names(y) <- c("one","two"))  #y벡터의 칼럼별 이름 지정
+y[1] #[]안에 있는 번째 숫자를 추출 (-시 그 부분 제외하고 출력)
+(a <- matrix(c(1:9),nrow = 3,ncol = 3,byrow=T)) #matrix(벡터(입력값),행수,열수,행 우선 생성)-행렬
+(colnames(a)<-c("one","two","three")) #colnames()-> 열이름 지정
+rownames(a) <- c(1,2,3) ;a#rownames() -> 행이름 지정
+mode(a);class(a)#mode() -> 자료형, class() -> 자료구조
+length(a) #데이터 개수
+apply(a,1,max) #apply(행렬,1-행단위(2-열단위),함수)
+(ar <- array(c(1:12),c(3,2,2)))  #(배열)array(벡터(입력값),c(행,열,면))
+(list <- list(key1=c(1),key2=c(2))) #list(key1=value1,key2=value2)
+unlist(list) #unlist() -> 리스트의 벡터화
+list$key1[1] #list$key[index],list[[2]]->변수명[[index]]
+lapply(list,max) #list에 각 key 값에 함수 적용 (list로 출력)
+sapply(list,max) #simply -> list에 함수적용하여 벡터로 출력(unlist(lapply(list,max))) 와 동일
+(multi_list <- list(c1=list(1,2,3),c2=list(10,20,30)))
+multi_list$c1;multi_list$c2
+do.call(cbind,multi_list) #cbind(multi_list$c1,multi_list$c2) 
+num <- c(1,2,3)
+name <-c("hong","kim","lee")
+pay <- c(150,250,300)
+(vemp <- data.frame(num,name,pay)) #벡터이용하여 데이터 프레임 형성
+m <-matri1683511x(
+  c(1,"hong",250,
+  2,"kim",350,
+  3,"lee",400),3,byrow=T)  
+(memp <- data.frame(m))  #행렬을 이용한 데이터 프레임 형성
+txtemp <- read.table('emp.txt', header=T, sep="")
+?read.table
+txtemp <- read.csv('emp.csv', header=T)  #txt.csv 이용하여 객체 생성
+str(memp) #데이터 프레임의 구조 보여줌, ncol-> 열의수, nrow -> 행의 수
+names(memp) #열의 이름 보여줌
+summary(memp) #데이터 프레임의 요약 통계량
+apply(memp[,c(1,3)],2,max) #apply( 프레임에서 열/행 추출,행/열단위, 함수)
+subset(memp,X1>=2) #subset(데이터프레임,조건)
+height <- data.frame(id=c(1,2,3),h=c(180,175,155))
+weight <- data.frame(id=c(1,2),w=c(80,75))
+(user <- merge(height,weight,by="id",all=T))
+?merge
+library(stringr)
+s <- "홍길동35이순신45유관순25"
+str_extract_all(s,"[0-9]{2}") #str_extract(문자열,정규표현식)
+str_extract_all(s,"[^가-힣]{2}") #한글 제외 출력
+taemin <- "990910-3234567"
+str_extract_all(taemin,"\\d{6}-\\d{6}[7]") #\\d-> 숫자, \\w -> 단어(한글,영문자, 숫자)
+string <-'hongkild105lee1002you25강감찬2005'
+str_length(string) #문자열 길이 (=nchar(string))
+str_locate(string,"1002") #문자열 위치 (=regexpr('1002',string))
+str_sub(string,15,18) #부분 문자열 만들기 str_sub(문자열, from,to), (=substring(string,15,18))
+str_to_upper(string) #대문자로 변경 (=toupper)
+str_to_lower(string) #소문자로 변경 (=tolower)
+(string_rep <- str_replace(string, 'hongkild105', '홍길동35,')) # 문자열 교체 [gsub("hongkild105","홍길동35",string)]
+(string_c <- str_c(string_rep, ',강감찬55')) # 문자열 결합 [=paste0(string_rep,",강강찬55")]
+(string_sp <- str_split(string_c, ',')) # 문자열 분리 [=strsplit(string_c,",")]
+string_vec <- c('홍길동35', '이순신45', '유관순25', '강감찬55')
+(string_join <- paste(string_vec, collapse = ',')) # 문자열 합치기
+number=1:5
+paste("file_chr",number,".txt", sep="")
+
+
+#Lecture4
+#scan() -> 키보드로 직접 숫자 입력/scan(what=character())-> 문자 데이터 입력
+#edit() -> 데이터 편집기 이용
+#cat() -> 출력할 문자열과 변수를 화면에 같이 출력
+#print() -> 변수만 출력
+getwd() # 현재 저장되어있는 경로 확인
+setwd() # 주소를 넣어서 경로 저장
+student  <- read.table("student.txt") #저장되어있는 경로의 파일을 변수에 저장
+names(student) <- c('번호', '이름', '키', '몸무게') # 컬럼명 설정
+read.table("student.txt",header = T,filechoose(),sep=",",na.strings='-')#칼럼명 지정, 파일탐색기, 세미콜론으로 칼럼 구분, 결측치 처리
+student4 <- read.csv("student4.txt", na.strings="-") # CSV파일 읽기
+# CSV (comma separated value)은 ‘,’로 컬럼을 구분하며 read.csv는 sep는 ‘,’ 그리고 header 는 T가 기본값임
+install.packages("data.table")
+library(data.table)
+stock <- fread("stock.csv") # 대용량 데이터 (>1GB)을 빠르게 읽을 수 있음
+stock <- read.csv("stock.csv") # read.csv와 fread 속도 비교
+install.packages("xlsx")   # xlsx 패키지 
+install.packages("rJava")   # rJava 패키지 (JRE 설치 필요)
+Sys.setenv(JAVA_HOME="C:\\Program Files\\Java\\jre1.8.0_221")# Java 실행환경설정
+library(xlsx)
+library(rJava)
+studentex <- read.xlsx("studentexcel.xlsx", sheetIndex=1, encoding="UTF-8")
+studentex
+write.table(student, "student_new.txt", row.names=F, quote=F) #txt파일 저장, row.name 첫 행 제거, quote 인용부호
+student_new <- read.table("student_new.txt",header=T)
+student_new
+
+write.csv(student4, "student4_new.csv", row.names=F, quote=F, fileEncoding="UTF-8") #csv 파일 저장
+student4_new <- read.csv("student4_new.csv", na.strings="-", fileEncoding="UTF-8")
+student4_new
+
+# 인터넷 사이트에서 직접 파일을 읽을 수 있음
+GDP_ranking <- read.csv("http://databank.worldbank.org/data/download/GDP.csv",skip=3)[2:206,-c(3,6)] # 1-3번째 행 까지 불필요, 2:206행만 저장, 3,6열 제거
+head(GDP_ranking)
+GDP_ranking15 <- head(GDP_ranking, 15) # 상위 15국
+names(GDP_ranking15) <- c('Code', 'Ranking','Nation','GDP')
+head(GDP_ranking15,4)
+library(stringr)
+num_gdp <- as.numeric(str_replace_all(GDP_ranking15$GDP, ',', ''))/1000
+GDP_ranking15$GDP <- num_gdp
+barplot(GDP_ranking15$GDP,col=rainbow(15),xlab="국가(nation)",ylab="단위(천달러)", names.arg = GDP_ranking15$Nation) # las=2, cex.names=0.8
+install.packages("XML") # XML 패키지 설치
+install.packages("httr") # httr 패키지 설치
+library(XML)
+library(httr)
+url <- "http://ssti.org/blog/useful-stats-capita-personal-income-state-2010-2015"
+get_url <- GET(url) # httr 제공하는 함수로 HTML 소스를 가져 옴
+get_url$content # 16 진수로 내용을 보여줌
+rawToChar(get_url$content) # 바이너리 소스를 html 태그로 변환  
+html_cont <- readHTMLTable(rawToChar(get_url$content), stringsAsFactors = F) # Extracts data from HTML tables in an HTML document
+html_cont <- as.data.frame(html_cont)
+names(html_cont) <- c("State",'y2010','y2011','y2012','y2013','y2014','y2015')
+head(html_cont)
+
+#Lecture5
+# if()문 only
+score <- 85
+result <- "노력"
+if (score>80) {result <-"우수"}
+cat("당신의 학점은 ",result,"(",score,")입니다","\n",sep="")
+# if ~ else if 
+score <- 90
+if(score >= 90){ result="A" 
+} else if(score >=80){ result="B" 
+} else if(score >=70){ result="C" 
+} else if(score >=60){ result="D" 
+} else{ result="F"} 
+cat("당신의 학점은 ",result,"학점(",score,")입니다","\n",sep="")
+
+# ifelse()문
+score <- c(100,85,70,90)
+names(score) <- c("이수영","윤창민","이혜수","김창수")
+ifelse(score>=80, "우수","노력")
+
+# switch()문
+input <- "name"
+switch(input, id="hong", pwd="1234",age=105, name="홍길동")    
+# which()문 (유용한 함수!!)
+no <- c(1:5)
+name <-c("홍길동","이순신","강감찬","유관순","김유신")
+score <- c(85,78,89,90,74)
+exam <- data.frame(학번=no,이름=name,성적=score)
+exam[which(exam$학번==4),] 
+# for()문
+d <- numeric()
+for (i in 1:10){
+  d[i] <- i*10
+  cat(i,d[i],"\n")
+}
+# 짝수값 출력
+for (i in 1:10){
+  if (i%%2==0) print(i)
+}
+# 홀수값 출력
+for (i in 1:10){
+  if (i%%2==0) { next
+  } else { print(i) }
+}
+score = c(85,95)
+name = c('홍길동','이순신') 
+i <- 1
+for (s in score) {
+  cat(name[i],"점수:",s,"\n")
+  i <- i+1   
+} 
+# while()문
+i = 0
+while(i < 10){
+  i <- i + 1 
+  print(i) 
+}
+
+library(RSADBE) # Data Sets for the ＂R Statistical Application Development by Example＂ Book
+data(Bug_Metrics_Software)
+(dat <-Bug_Metrics_Software[,,1])
+rowSums(dat)
+rowMeans(dat)
+apply(dat,1,sum)
+apply(dat,1,mean)
+colSums(dat)
+colMeans(dat)
+apply(dat,2,sum)
+apply(dat,2,mean)
+# 난수 생성 및 확률 분포
+# 단계 1 : 정규분포(연속형)의 난수 생성 
+n <- 1000
+r <- rnorm(n, mean = 0, sd = 1) 
+hist(r, col="light blue") # 대칭성
+# 단계 2 : 균등분포(연속형)의 난수 생성 
+n <- 1000
+r2 <- runif(n, min=0, max=1) 
+hist(r2, col="pink")
+# 단계 3 : 이항분포(이산형) 난수 생성  
+set.seed(123) # 동일한 난수 생성
+n <- 20
+rbinom(n, 1, prob = 1/2) 
+rbinom(n, 2, 0.5)  
+rbinom(n, 10, 0.5) 
+n <- 100
+rbinom(n, 5, prob = 1/6)
+
+# 매개변수가 없는 함수
+f1 <- function(){
+  cat("매개변수가 없는 함수","\n")
+}
+f1() # 함수 호출 
+# 매개변수가 있는 함수
+f2 <- function(x){ # 가인수 
+  cat("x의 값 = ",x, "\n") # \n 줄바꿈
+}
+f2(10) # 실인수
+# 리턴값이 있는 함수
+f3 <- function(x, y){
+  add <- x + y # 덧셈 
+  return(add) # 결과 반환 
+}
+add <- f3(10, 20)
+add
+# 분산과 표준편차를 구하는 함수 
+x <- c(7, 5, 12, 9, 15, 6) 
+var_sd <- function(x) {
+  var <- sum( (x-mean(x))^2 ) / (length(x) - 1) # 표본분산 
+  sd <- sqrt(var)  # 표본 표준편차 
+  cat('표본분산 : ', var, '\n')
+  cat('표본 표준편차 :', sd, '\n')
+}
+var_sd(x) 
+# 구구단 출력 함수 
+gugu <- function(i) {
+  for(x in i) {
+    cat("**", x , "단 **\n")
+    for(y in 1:9){
+      cat(x, "*", y, "=", 
+          x*y, "\n")
+    }
+    cat("\n")
+  }
+}
+gugu(3)
+# 동전 앞/뒤 난수 확률분포 함수 
+coin <- function(n){
+  r <- runif(n, min=0, max=1)
+  result <- numeric()
+  for (i in 1:n){
+    if (r[i] <= 0.5)
+      result[i] <- 0 # 앞면 
+    else 
+      result[i] <- 1 # 뒷면
+  }
+  return(result)
+}
+
+coin(10) # 시행 횟수 : 10회
+# 몬테카를로 시뮬레이션 
+montaCoin <- function(n){
+  cnt <- 0
+  for(i in 1:n){
+    cnt <- cnt + coin(1) 
+    # 동전 함수 호출 
+  }
+  result <- cnt / n
+  return(result)
+}
+
+set.seed(2)
+montaCoin(10) # 0.6
+montaCoin(30) # 0.4333333
+montaCoin(100) # 0.47
+montaCoin(1000) # 0.502
+
+# 데이터 생성
+chart_data <- c(305,450,320,460,330,480,380,520)
+names(chart_data) <- c("2014-1","2015-1","2014-2","2015-2","2014-3","2015-3","2014-4","2015-4")
+
+# 세로 Bar plot 그리기 
+barplot(chart_data, 
+        ylim=c(0,600), # y축 범위 (min,max)
+        col=rainbow(8), # bar색 (무지개색)
+        ylab="매출액", # y축 라벨
+        xlab="연도별 분기현황", # x축 라벨
+        main ="2014년도 vs 2015년도 분기별 매출현황 비교")
+? barplot # help file
+# horizontal Bar plot 그리기 
+barplot(chart_data, 
+        horiz=TRUE, # bars are drawn horizontally with first at bottom
+        xlim=c(0,600), # x축 범위 
+        xlab="매출액", ylab="연도별 분기현황", 
+        cex.names=0.8,
+        col=rainbow(8),
+        main ="2014년도 vs 2015년도 분기별 매출현황 비교")
+
+barplot(chart_data, xlim=c(0,600), horiz=TRUE, 
+        xlab="매출액", ylab="연도별 분기현황",  
+        space=2, # bar 사이 간격 크기
+        cex.names=1, # 축 이름 크기
+        col=rep(c("red","green"),4), # red, green 반복
+        main ="2014년도 vs 2015년도 분기별 매출현황 비교")
+data(VADeaths) # Death Rates in Virginia (1940)
+VADeaths
+
+class(VADeaths) # "matrix"
+mode(VADeaths) # "numeric"
+
+# 개별 Bar plot 
+barplot(VADeaths, 
+        beside=F, # True이면 X축 값을 측면으로 배열 
+        col=rainbow(5), main="Death Rates in Virginia")
+legend(19, 71, # x,y coordinate of left top
+       c("50-54","55-59","60-64","65-69","70-74"), cex=0.8, # legend 크기 
+       fill=rainbow(5)) # 색은 bar plot과 동일
+# 누적 Bar plot 
+barplot(VADeaths, 
+        beside=F, # False이면 누적 box plot을 그림
+        col=rainbow(5), main ="Death Rates in Virginia ") 
+legend(3.8, 200, # x,y coordinate of left top
+       c("50-54","55-59","60-64","65-69","70-74"), cex=0.8, fill=rainbow(5) )
+# data
+chart_data
+
+# Dot Chart
+dotchart(chart_data, col=c("green","red"), lcolor="black", pch=1:2, labels=names(chart_data), xlab="매출액", main="분기별 판매현황 점 차트 시각화", cex=1.2)
+?dotchart
+# Pie plot 
+pie(chart_data, labels = names(chart_data), 
+    border='blue', col=rainbow(8), cex=1.2) 
+title("2014~2015년도 분기별 매출")
+
+# labels: 조각에 대한 레이블 표시
+# border: 보더라인 색
+# title(): 제목 추가
+
+# Displays a 3D pie chart with optional labels.
+install.packages("plotrix")
+library(plotrix)
+slices <- c(10, 12, 4, 16, 8)lbls <- c("US", "UK", "Australia", "Germany", "France")
+pie3D(slices, labels=lbls, explode=01,main="Pie Chart of Countries ")
+# Iris Data
+data(iris) # get iris data 
+head(iris)
+
+summary(iris$Sepal.Length) # 꽃받침 길이 요약
+
+# Draw Histogram
+hist(iris$Sepal.Length, xlab="sepal length of iris", col="green", main="iris sepal length histogram", xlim=c(4.3, 7.9)) 
+# How to specify the number of cells for the histogram? (ex. 20)
+# How to specify the range of x more efficiently? (ex. min, max) 
+
+# Draw Histogram with density line
+hist(iris$Sepal.Width, xlab="sepal width of iris",col="mistyrose",freq = F, main="iris sepal width histogram", xlim=c(2.0, 4.5)) # freq = F로 설정하면 y축이 frequency가 아닌 density로 바뀜
+
+# 밀도를 기준으로 line을 추가함
+lines(density(iris$Sepal.Width), col="red")
+
+dens_width = density(iris$Sepal.Width)
+names(dens_width)
+range(dens_width$x)
+range(dens_width$y)
+# Draw Histogram with normal distionbution 
+hist(iris$Sepal.Width, xlab="iris$Sepal.Width",col="mistyrose",freq = F, main="iris sepal width histogram", xlim=c(2.0, 4.5))
+
+# Add density curve 
+lines(density(iris$Sepal.Width), col="red")
+
+# Add Normal distribution curve 
+x <- seq(2.0, 4.5, 0.1)
+curve(dnorm(x, mean=mean(iris$Sepal.Width), sd=sd(iris$Sepal.Width)), col="blue", add = T)
+legend(2,1,cex = 0.8,lty = 1,c("density","normal"),fill = c("red","blue"))
+# Please add legend using legend function with c("density","normal"), lty=1
+# Draw Box plot
+boxplot(VADeaths, range=1, col="light blue", ) # range=0 : 최소값과 최대값을 점선으로 연결하는 역할
+
+# Draw Box plot with notches and base line
+boxplot(VADeaths, range=0, col="light blue",notch=T) #notch=> 다른 형태
+abline(h=37, lty=1, col="red",) # 기준선 추가(lty=3 : 선 스타일-점선)
+points(apply(VADeaths,2,mean),col="red",pch=16) #pch=16 색채우기
+
+# Draw Scatter plot
+set.seed(10)
+price <- runif(10, min=1, max=100) # 1~100사이 10개 난수 발생
+plot(price, col="blue", pch=16) 
+par(new=T) # 차트 추가 
+line_chart = 1:100  
+plot(line_chart, type="l", col="red", axes=F, ann=F) # axes=F,ann=F속성으로 x축y축 눈금 축이름 제거 
+text(70,80, "대각선 추가", col='blue')
+
+# How plot functions work
+methods(plot) # 현재 plot에서 쓸 수 있는 객체 종류
+data('WWWusage') # Time-Series data
+class(WWWusage) # ts
+plot(WWWusage) # function overriding
+
+# Draw Scatter plot for overlapped points
+install.packages("Histdata")
+library(HistData) # 패키지 로드
+data(Galton) # galton 데이터 셋 가져오기 
+head(Galton)
+
+galtonData <- as.data.frame(table(Galton$child, Galton$parent))
+names(galtonData)=c("child","parent", "freq")
+head(galtonData) # Var1 Var2 Freq(중복 수) 
+
+parent <- as.numeric(galtonData$parent)
+child <- as.numeric(galtonData$child)
+plot(parent, child, pch=21, col="blue", bg="green", cex=0.2*galtonData$freq, xlab="parent", ylab="child")
+
+# Scatter plot for overlapped points
+x=rnorm(1000)
+y=rnorm(1000)
+
+(xy = matrix(c(x,y),length(x),2)) # length(x) * 2
+plot(xy, col=densCols(xy),xlab="x-axis", ylab="y-axis",pch=20,cex=2,main="X vs Y") # density에 따라 색 변경
+
+# Scatter plot for 3 dimension
+install.packages('scatterplot3d')
+library(scatterplot3d)
+levels(iris$Species) 
+[1] "setosa"     "versicolor" "virginica" 
+
+# Iris species
+iris_setosa = iris[iris$Species == 'setosa',]
+iris_versicolor = iris[iris$Species == 'versicolor',]
+iris_virginica = iris[iris$Species == 'virginica',]
+
+# Draw 3D scatter plot
+d3 <- scatterplot3d(iris$Petal.Length, iris$Sepal.Length, iris$Sepal.Width, type='n')
+d3$points3d(iris_setosa$Petal.Length, iris_setosa$Sepal.Length,
+            iris_setosa$Sepal.Width, bg='orange', pch=21)
+d3$points3d(iris_versicolor$Petal.Length, iris_versicolor$Sepal.Length,
+            iris_versicolor$Sepal.Width, bg='blue', pch=23)
+d3$points3d(iris_virginica$Petal.Length, iris_virginica$Sepal.Length,
+            iris_virginica$Sepal.Width, bg='green', pch=25)
+
+# 그룹별 기술 통계량 구하기 
+# tapply() 함수 (R 기본 함수:table+apply)
+# tapply(data,variable,fun)
+head(iris)
+unique(iris$Species)
+tapply(iris$Sepal.Length, iris$Species, mean)
+tapply(iris$Sepal.Length, iris$Species, sd)
+# Compute mean of Petal.Width for each species
+# ddply()함수 (plyr package) 
+# ddply(.data, .variables, .fun = NULL, ...)
+# execute multiple functions
+install.packages("plyr")
+library(plyr)
+avg_df <- ddply(iris, .(Species), summarize, avg = mean(Sepal.Length), std = sd(Sepal.Length))
+avg_df
+head(iris)
+summarize(iris, avg=mean(Sepal.Length), sd=sd(Sepal.Length))
+# Add two more columns such as min and max for sepal.Length ( also use round(number,2) for avg,std)
+
+# merge data frames
+x = data.frame(id = c(1,2,3,4,6), height = c(160,171,173,162,180))
+y = data.frame(id = c(5,4,1,3,2), weight = c(55,73,60,57,80))
+left <- join(x, y, by='id') # ID컬럼 으로 left 조인(왼쪽 변수 기준)
+left
+(right <- join(x,y,by='id',type="right"))
+inner <- join(x, y,by='id', type='inner') #모두 키 값이 있는 경우를 조인
+inner
+full <- join(x,y,by='id', type='full') # type='full' : 모든 항목 조인
+full
+# Please execute join with type='right‘ option
+# merge data frames by two keys
+(x = data.frame(key1 = c(1,1,2,2,3),  key2 = c('a','b','c','d','e'), val1 = c(10,20,30,40,50)))
+(y = data.frame(key1 = c(3,2,2,1,1),  key2 = c('e','d','c','b','a'),val2 = c(500,400,300,200,100)))
+join(x,y,by=c("key1","key2"),)
+# Please merge x and y by key1 and key2 (by: character vector of variable names to join by)
+
+# install packages
+install.packages(c("dplyr","hflights"))
+library(dplyr)
+library(hflights) 
+str(hflights) # Flights that departed Houston in 2011
+hflights_df <- tbl_df(hflights)
+hflights_df # data frame을 확장해 만든 tbl_df class (dplyr package에서 사용)
+
+# 조건에 맞는 데이터 필터링
+filter(hflights_df, Month == 1 & DayofMonth == 2) # AND(&)
+filter(hflights_df, Month == 1 | Month == 2) # OR (|)
+# Please filter hglights_df by  7 <= Month < 9
+
+select(filter(hflights,Month==1| Month==2),
+       Year,Month, DepTime,ArrTime)
+
+hflights %>% 
+  filter(Month==1| Month==2) %>%
+  select(Year,Month, DepTime,ArrTime)
+
+# 칼럼으로 데이터 정렬 
+arrange(hflights_df, Year, Month, DepTime) # 오름차순으로 정렬
+arrange(hflights_df, Year, Month, desc(DepTime)) # DepTime에 대해서는 내림차순으로 정렬
+
+# Please arrange hglights_df by ArrTime additionally as well
+
+# 칼럼으로 데이터 검색 
+select(hflights_df, Year, Month, DepTime, ArrTime)  # 4개 칼럼 선택
+select(hflights_df, Year:ArrTime) # 칼럼의 범위 지정하기 
+select(hflights_df, -(Year:DayOfWeek)) # Year부터 DayOfWeek 제외
+
+# Extract 1~3 columns from hflights_df ( use 1:3 )
+
+# 데이터 셋에 칼럼 추가 
+mutate(hflights_df, gain = ArrDelay - DepDelay, gain_per_hour = gain/(AirTime/60) ) # gain, gain_per_hour 컬럼 추가
+
+# 위의 table에서 Year, Month, ArrDelay, DepDelay, gain, gain_per_hour 컬럼만 보이는 table 만들기 (select이용)
+# 요약 통계치 계산 
+summarize(hflights_df, avgAirTime = mean(AirTime, na.rm =T))
+summarize(hflights_df, cnt = length(DepDelay), delay = mean(DepDelay, na.rm = TRUE))
+
+# Add arrTimeVar as var(AirTime, na.rm=TRUE)
+
+# 질적 변수 대상 그룹화 
+group_by(hflights_df, Month)
+# A tibble: 227,496 x 21
+# Groups:   Month [12]
+
+# Please figure out the following command (use pipe)
+hflights_df %>% group_by(Month) %>% summarize(AvgAirTime=mean(AirTime,na.rm=T))
+
+# install reshape2
+install.packages("reshape2") 
+library(reshape2)
+
+# Long format을 Wide format으로 변경
+setwd("C:/Rwork/Part-II/")
+data <- read.csv("data.csv")
+data
+
+
+
+# dcast(data, 행구성변수~열구성변수, value.var="측정변수", 적용함수)
+wide <- dcast(data, Customer_ID ~ Date, value.var='Buy', sum) # length?
+wide
+# Wide format을 Long format으로 변경 
+# melt(data, id="기준column")
+long <- melt(wide, id='Customer_ID') 
+long
+
+
+
+names(long)[2:3]=c("Date","Buy")
+
+# wide -> long 
+data("smiths")
+smiths
+long <- melt(smiths, id=1:2)
+long
+
+# long -> wide 
+dcast(long, subject + time ~...)
+dcast(long, subject + time ~ variable, value.var = 'value')
+# 3차원 배열 형식으로 변경 
+data('airquality') # airquality  New York Air Quality Measurements
+head(airquality)
+
+
+
+str(airquality) # data.frame':	153 obs. of  6 variables:
+air_melt <- melt(airquality, id=c("Month", "Day"), na.rm=TRUE) # wide -> long 
+head(air_melt) # month day variable value
+
+
+
+# acast(data,행구성변수~열구성변수~측정변수)
+acast<- acast(air_melt, Day ~ Month ~ variable)
+acast<- acast(air_melt, Day ~ Month ~ variable, value.var = 'value')
+acast # array 객체 
