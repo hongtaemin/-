@@ -1,0 +1,71 @@
+#1번
+library(data.table)
+d1 <- read.csv("https://canvas.ssu.ac.kr/courses/10411/files/244340/download?verifier=MxF4lhRP10gxLaPk6FPZTKtE3VA0ezVKefQLPtL1")
+d2 <- fread("https://canvas.ssu.ac.kr/courses/10411/files/244340/download?verifier=MxF4lhRP10gxLaPk6FPZTKtE3VA0ezVKefQLPtL1")
+head(d1)
+d2
+#2번
+library(stringr)
+d1$period <- str_replace_all(d1$period, "-", "~")
+head(d1$period)
+#3번
+a<-str_sub(d1$period,1,5)
+b<-str_sub(d1$period,1,2)
+c<-str_sub(d1$period,6,7)
+d1$period<-paste0(paste0(a,b,sep=""),c,sep="")
+head(d1$period)
+head(d1)
+#4번
+na_d1 <- is.na(d1)
+apply(na_d1,2,sum) #colSums(is.na(d1)) 와 동일
+d1_u5mr<- na.omit(d1$u5mr)
+head(d1_u5mr)
+
+newd1<-subset(d1,d1$u5mr!="NA")
+head(newd1,20)
+#5번
+hist(d1_u5mr,col="light blue", freq = F, breaks = 20)
+lines(density(d1_u5mr),col="red")
+#6번
+library(dplyr)
+d1 %>%
+  filter(d1$gdppc>0) %>%
+  select(cname,gdppc) %>%
+  group_by(cname) 
+avg<-ddply(d1,.(cname),summarize,mean=mean(gdppc))
+head(avg)
+
+d1_na_gdppc<-subset(d1,d1$gdppc!="NA")
+tapply(d1_na_gdppc$gdppc, d1_na_gdppc$cname, mean)
+
+
+#7번
+newd1$gdppc<-ifelse(is.na(newd1$gdppc),0,newd1$gdppc) #NA값을 0으로 변경
+head(newd1,20)
+cname<-unique(newd1$cname) #cname의 이름 벡터(중복제거이용함)
+cname
+gdppc_mean<-tapply(d1_na_gdppc$gdppc, d1_na_gdppc$cname, mean) #cname별 평균
+gdppc_mean<-as.numeric(gdppc_mean) #문자열을 숫자형태로 바꿈
+for(i in c(1:144)){
+  for(j in c(1:length(newd1$gdppc))){
+    if(newd1$gdppc[j]==0&newd1$cname[j]==cname[i]){
+      newd1$gdppc[j]<-gdppc_mean[i]}
+  }
+}
+
+#cname[i]에 해당하는 평균값이mean[i]임을 이용해서 반복문돌림
+
+head(newd1,100)
+
+#8번
+library(dplyr)
+d1_360 <- filter(d1,d1$u5mr>=360)
+d1_360
+
+#9번
+library(reshape2)
+wide <- dcast(d1_360,period~cname,value.var = "gdppc")
+wide
+
+#10번
+write.csv(newd1,"mortality_new.csv",row.names = F, quote = F)
